@@ -83,7 +83,7 @@ inline fn isSafe(report: []isize) result {
             // std.debug.print("not sorted {} {} {}\n", .{ a, b, d });
             return .unsafe;
         }
-        if (d < 0) d = -d;
+        d = @abs(d);
         if (d < 1 or d > 3) {
             // std.debug.print("out of range: {}\n", .{d});
             return .unsafe;
