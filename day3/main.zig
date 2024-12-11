@@ -8,6 +8,62 @@ test "part1" {
     var i: usize = 0;
 
     var total: usize = 0;
+    while (i < input.len) : (i += 1) {
+        // const x = i;
+
+        // parse "mul"
+        if (i + 2 >= input.len or !std.mem.eql(u8, input[i .. i + 3], "mul")) {
+            continue;
+        }
+        i += 3;
+        if (i >= input.len) break;
+
+        // parse "("
+        if (input[i] != '(') continue;
+        i += 1;
+
+        // parse left num
+        var j: usize = 0;
+        while (j < 3) : (j += 1) {
+            if (i + j >= input.len) break;
+            const c = input[i + j];
+            if (c < '0' or '9' < c) break;
+        }
+        if (j == 0) continue;
+        const left = try std.fmt.parseInt(usize, input[i .. i + j], 10);
+        i += j;
+        if (i >= input.len) break;
+
+        // parse ","
+        if (input[i] != ',') continue;
+        i += 1;
+
+        // parse right num
+        j = 0;
+        while (j < 3) : (j += 1) {
+            if (i + j >= input.len) break;
+            const c = input[i + j];
+            if (c < '0' or '9' < c) break;
+        }
+        if (j == 0) continue;
+        const right = try std.fmt.parseInt(usize, input[i .. i + j], 10);
+        i += j;
+        if (i >= input.len) break;
+
+        // parse ")"
+        if (input[i] != ')') continue;
+
+        // std.debug.print("at {}, left {}, right: {} input: {s}\n", .{ i, left, right, input[x .. i + 1] });
+        total += left * right;
+    }
+
+    std.debug.print("Part 1: {}\n", .{total});
+}
+
+test "part2" {
+    var i: usize = 0;
+
+    var total: usize = 0;
     var do = true;
     const DONT = "don't()";
     const DO = "do()";
@@ -71,22 +127,5 @@ test "part1" {
             total += left * right;
     }
 
-    std.debug.print("Part 1: {}\n", .{total});
+    std.debug.print("Part 2: {}\n", .{total});
 }
-
-// const lexer = struct {
-//     input: []const u8,
-//     pos: usize,
-//
-//     fn acceptWord(self: *lexer, word: []const u8) bool {
-//         if (self.pos + word.len <= self.input.len and
-//             std.mem.eql(u8, self.input[self.pos .. self.pos + word.len], word))
-//         {
-//             self.pos += word.len;
-//             return true;
-//         }
-//         return false;
-//     }
-//
-//     fn acceptMul(self: *lexer)
-// };
